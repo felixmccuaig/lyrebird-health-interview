@@ -23,14 +23,16 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: "yarn"
 
+      # Install and test in the API directory
       - name: Run API tests
+        working-directory: api
         run: |
-          cd api
           yarn install
           yarn test
 
+      # Install and test in the Frontend directory
       - name: Run Frontend tests
+        working-directory: frontend
         run: |
-          cd frontend
           yarn install
           yarn test
