@@ -14,12 +14,20 @@ export class ConsultationService {
   private noteRepo: NoteRepository; // Add NoteRepository
   private transcriptionService: TranscriptionService;
 
-  constructor() {
-    this.consultationRepo = new ConsultationRepository();
-    this.recordingRepo = new RecordingRepository();
-    this.transcriptionRepo = new TranscriptionRepository();
-    this.noteRepo = new NoteRepository(); // Initialize NoteRepository
-    this.transcriptionService = new TranscriptionService();
+  constructor(
+    consultationRepo?: ConsultationRepository,
+    recordingRepo?: RecordingRepository,
+    transcriptionRepo?: TranscriptionRepository,
+    noteRepo?: NoteRepository,
+    transcriptionService?: TranscriptionService
+  ) {
+    // If provided, use the passed repositories/services; otherwise, initialize default instances
+    this.consultationRepo = consultationRepo ?? new ConsultationRepository();
+    this.recordingRepo = recordingRepo ?? new RecordingRepository();
+    this.transcriptionRepo = transcriptionRepo ?? new TranscriptionRepository();
+    this.noteRepo = noteRepo ?? new NoteRepository();
+    this.transcriptionService =
+      transcriptionService ?? new TranscriptionService();
   }
 
   public async createConsultation(

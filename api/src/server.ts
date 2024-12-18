@@ -10,7 +10,6 @@ dotenv.config();
 
 const app = express();
 
-// Initialize TypeORM Data Source
 AppDataSource.initialize()
   .then(() => {
     console.log("Data Source has been initialized!");
@@ -30,6 +29,10 @@ AppDataSource.initialize()
     app.use("/consultations", consultationsRouter);
     app.use("/consultations", consultationSummaryRoutes);
 
+    app.get("/health", (req, res) => {
+      res.status(200).json({ status: "OK" });
+    });
+
     // Start Server
     const PORT = process.env.PORT || 5000;
     app.listen(PORT, () => {
@@ -39,3 +42,5 @@ AppDataSource.initialize()
   .catch((err) => {
     console.error("Error during Data Source initialization:", err);
   });
+
+export default app;
