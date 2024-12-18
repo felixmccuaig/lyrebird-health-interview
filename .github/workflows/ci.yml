@@ -21,7 +21,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-          cache: "yarn"
+          cache: false # Disable automatic caching
 
       # Install and test in the API directory
       - name: Run API tests
