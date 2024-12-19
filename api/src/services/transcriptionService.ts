@@ -16,7 +16,7 @@ export class TranscriptionService {
 
   constructor() {
     this.apiKey = process.env.OPENAI_API_KEY;
-    if (!this.apiKey) {
+    if (!this.apiKey && process.env.NODE_ENV !== "test") {
       throw new Error("OpenAI API key not configured.");
     }
   }
