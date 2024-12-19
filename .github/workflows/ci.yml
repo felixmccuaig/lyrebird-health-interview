@@ -10,8 +10,22 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
+    services:
+      # This ensures Docker daemon is running
+      docker:
+        image: docker:dind
+        options: >-
+          --privileged
+          -v /var/run/docker.sock:/var/run/docker.sock
+        ports:
+          - 2375:2375
+
     steps:
       - uses: actions/checkout@v4
+
+      # Set up Docker for TestContainers
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v3
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -27,3 +41,7 @@ jobs:
       - name: Run tests
         working-directory: ./api
         run: yarn test
+        env:
+          # These env variables help TestContainers work in CI
+          TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE: /var/run/docker.sock
+          DOCKER_HOST: unix:///var/run/docker.sock
