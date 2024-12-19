@@ -48,9 +48,11 @@ interface ConsultationNote {
 }
 
 const MainContent: React.FC<MainContentProps> = ({ consultation }) => {
-  const [consultationNotes, setConsultationNotes] = useState<ConsultationNote[] | null>(null);
+  const [consultationNotes, setConsultationNotes] = useState<ConsultationNote | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
+
+  console.log(consultationNotes)
 
   const generateConsultationNotes = async () => {
     if (!consultation) return;
@@ -63,7 +65,7 @@ const MainContent: React.FC<MainContentProps> = ({ consultation }) => {
       const response = await axios.post(`${apiUrl}/consultations/${consultation.id}/generate-notes`);
 
       if (response.data.consultationNote) {
-        setConsultationNotes((prev) => [...(prev || []), response.data.consultationNote]);
+        setConsultationNotes(response.data.consultationNote);
         alert('Consultation notes generated successfully!');
       }
     } catch (err: any) {
@@ -110,34 +112,16 @@ const MainContent: React.FC<MainContentProps> = ({ consultation }) => {
       </div>
 
       {/* Consultation Notes Section */}
-      {consultationNotes && consultationNotes.length > 0 && (
+      {consultationNotes && (
         <div className="mt-8">
           <h3 className="text-xl font-semibold mb-4">Consultation Notes:</h3>
           <ul className="space-y-4">
-            {consultationNotes.map((note) => (
-              <li key={note.id} className="p-4 border rounded-md bg-gray-50">
+          <li key={consultationNotes.id} className="p-4 border rounded-md bg-gray-50">
                 <div className="flex justify-between items-center mb-2">
-                  <span className="font-medium">Note #{note.id}</span>
-                  <a
-                    href="#"
-                    className="text-blue-500 hover:underline"
-                    onClick={() => {
-                      // Implement download or view functionality
-                      // For example, open in a new tab or download as PDF
-                      const blob = new Blob([note.generatedContent], { type: 'text/markdown' });
-                      const url = URL.createObjectURL(blob);
-                      const link = document.createElement('a');
-                      link.href = url;
-                      link.download = `ConsultationNote_${note.id}.md`;
-                      link.click();
-                      URL.revokeObjectURL(url);
-                    }}
-                  >
-                    Download
-                  </a>
+                  <span className="font-medium">Note #{consultationNotes.id}</span>
+                  <p>{consultationNotes.generatedContent}</p>
                 </div>
               </li>
-            ))}
           </ul>
         </div>
       )}

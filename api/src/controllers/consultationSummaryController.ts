@@ -30,15 +30,24 @@ export class ConsultationSummaryController {
       }
 
       const combinedContent = await summariseNotes(consultation);
+      if (consultation.consultationNote) {
+        consultation.consultationNote.generatedContent = combinedContent;
+        const updatedNote = await consultationNoteRepo.save(
+          consultation.consultationNote
+        );
 
+        res.status(200).json({ consultationNote: updatedNote });
+        return;
+      }
+
+      // Create new note if one doesn't exist
       const newConsultationNote = consultationNoteRepo.create({
         consultation,
         generatedContent: combinedContent,
       });
 
-      await consultationNoteRepo.save(newConsultationNote);
-
-      res.status(201).json({ consultationNote: newConsultationNote });
+      const savedNote = await consultationNoteRepo.save(newConsultationNote);
+      res.status(201).json({ consultationNote: savedNote });
       return;
     } catch (error) {
       console.error("Error generating consultation notes:", error);
