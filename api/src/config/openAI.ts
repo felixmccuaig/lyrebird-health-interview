@@ -2,6 +2,12 @@
 
 import OpenAI from "openai";
 
-export const openai = new OpenAI({
-  apiKey: process.env["OPENAI_API_KEY"],
-});
+export var openai: any;
+
+if (process.env.NODE_ENV === "test") {
+  openai = new OpenAI({
+    apiKey: process.env["OPENAI_API_KEY"],
+  });
+} else {
+  openai = null;
+}
