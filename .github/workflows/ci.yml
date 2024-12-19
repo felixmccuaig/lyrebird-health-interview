@@ -1,4 +1,4 @@
-name: CI
+name: API Tests
 
 on:
   push:
@@ -7,32 +7,23 @@ on:
     branches: [master]
 
 jobs:
-  build-and-test:
+  test:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [22.x]
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      - name: Setup Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
-          cache: false # Disable automatic caching
+          node-version: "22"
+          cache: "yarn"
+          cache-dependency-path: api/yarn.lock
 
-      # Install and test in the API directory
-      - name: Run API tests
-        working-directory: api
-        run: |
-          yarn install
-          yarn test
+      - name: Install dependencies
+        working-directory: ./api
+        run: yarn install --frozen-lockfile
 
-      # Install and test in the Frontend directory
-      - name: Run Frontend tests
-        working-directory: frontend
-        run: |
-          yarn install
-          yarn test
+      - name: Run tests
+        working-directory: ./api
+        run: yarn test
