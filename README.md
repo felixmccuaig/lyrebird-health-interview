@@ -268,7 +268,7 @@ lyrebird-health-interview/
   │   └─ migrations/               # Raw SQL migration files
   ├─ docker-compose/
   │   └─ docker-compose.yml        # Docker Compose file for Postgres
-  ├─ frontend/                     # (if your React/Vue/Angular app is here)
+  ├─ frontend/                     # NextJS frontend
   ├─ .nvmrc                        # Node version (22.12.0)
   ├─ turbo.json                    # (if using Turborepo)
   └─ README.md
